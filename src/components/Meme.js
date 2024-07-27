@@ -9,6 +9,9 @@ export default function Meme() {
         randomImage: "http://i.imgflip.com/1bij.jpg"
     })
 
+    const defaultTopText = "Shut up"
+    const defaultBottomText = "and take my money"
+
     const [ allMemeImages, setAllMemeImages ] = React.useState(memesData)
 
     function getMemeImage() {
@@ -20,22 +23,41 @@ export default function Meme() {
             randomImage: url
         }))
     }
+
+    function textfieldChanged(event) {
+        const { name, value } = event.target
+        setMeme(prevMeme => ({
+            ...prevMeme,
+            [name]: value
+        }))
+    }
+    
     return (
         <main>
             <div className="form">
                 <input
                     type="text"
-                    placeholder="Top text"
+                    placeholder={defaultTopText}
                     className="form--input"
+                    name="topText"
+                    value={meme.topText}
+                    onChange={textfieldChanged}
                 />
                 <input
                     type="text"
-                    placeholder="Bottom text"
+                    placeholder={defaultBottomText}
                     className="form--input"
+                    name="bottomText"
+                    value={meme.bottomText}
+                    onChange={textfieldChanged}
                 />
                 <button className="form--button" onClick={getMemeImage}>Get a new meme image 🖼</button>
             </div>
-            <img src={meme.randomImage} alt="Meme" className="meme--image"></img>
+            <div className="meme">
+                <img src={meme.randomImage} alt="Meme" className="meme--image"></img>
+                <h2 className="meme--text top">{meme.topText == "" ?  defaultTopText : meme.topText}</h2>
+                <h2 className="meme--text bottom">{meme.bottomText == "" ?  defaultBottomText : meme.bottomText}</h2>
+            </div>
         </main>
     )
 }
