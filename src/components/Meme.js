@@ -1,5 +1,5 @@
 import React from "react"
-import memesData from "../memesData.js"
+// import memesData from "../memesData.js"
 
 export default function Meme() {
 
@@ -12,12 +12,19 @@ export default function Meme() {
     const defaultTopText = "Shut up"
     const defaultBottomText = "and take my money"
 
-    const [ allMemeImages, setAllMemeImages ] = React.useState(memesData)
+    const [ allMemes, setAllMemes ] = React.useState([])
+    React.useEffect(() => {
+        fetch("https://api.imgflip.com/get_memes")
+        .then(res => res.json())
+        .then(data => {
+            setAllMemes(data.data.memes)
+        })
+    }, [])
+
 
     function getMemeImage() {
-        const memesArray = allMemeImages.data.memes
-        const index = Math.floor(Math.random() * memesArray.length)
-        const { url } = memesArray[index]
+        const index = Math.floor(Math.random() * allMemes.length)
+        const { url } = allMemes[index]
         setMeme(oldMeme => ({
             ...oldMeme,
             randomImage: url
@@ -55,8 +62,8 @@ export default function Meme() {
             </div>
             <div className="meme">
                 <img src={meme.randomImage} alt="Meme" className="meme--image"></img>
-                <h2 className="meme--text top">{meme.topText == "" ?  defaultTopText : meme.topText}</h2>
-                <h2 className="meme--text bottom">{meme.bottomText == "" ?  defaultBottomText : meme.bottomText}</h2>
+                <h2 className="meme--text top">{meme.topText === "" ?  defaultTopText : meme.topText}</h2>
+                <h2 className="meme--text bottom">{meme.bottomText === "" ?  defaultBottomText : meme.bottomText}</h2>
             </div>
         </main>
     )
